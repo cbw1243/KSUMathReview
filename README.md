@@ -1,5 +1,5 @@
 # Description
-The course materials for Mathematics Review and Computer Programming (Fall, 2018) at Kansas State University are documented here. 
+These are materials for the Mathematics Review and Computer Programming course that I teach at Kansas State University in Fall 2018. 
 
 # Guidence for downloading
  

@@ -21,16 +21,16 @@ header-includes:
 ---
 
 ```{r setup, include=FALSE}
-setwd('C:/BWCHEN/2_Course/MathReview/Bowen2018/LectureR')
+setwd('C:/BWCHEN/2_Course/MathReview/Bowen2018/KSUMathReview/RMaterials')
 rm(list=ls())
 library(datasets)
 ```
 
-I write this lecture note to help you learn R at the beginning stage. In this note, I document and explain some rudimentary yet important R codes. These are also the ones that I have frequently used for doing my applied economics research in the last three years. I am confident that you should be able to handle many research tasks in R, if you understand all these codes. Yet, I shall remind you of that this is not a comprehensive list. You have to learn more to accomplish more sophiscated and interesting works, such as economic modeling, machine learning, text mining and so on. But this note will certainly help you build foundations for doing those. 
+I write this lecture note to help you learn R at the beginning stage. In this note, I document and explain some rudimentary yet important R codes. These are also the ones that I have frequently used for doing my applied economics research in the last three years. You should likely be able to handle many research tasks in R, if you understand all these codes. Yet, I shall remind you of that this is not a comprehensive list. You have to learn more to do more sophiscated and interesting works, such as economic modeling, econometric estimation, machine learning, text mining and so on. But this note will certainly help you build foundations for doing those. 
 
 I want to emphasize that this note will not help you unless you practice with it. Based on my experience, there is no better way of becoming proficient at R than practicing it a lot. You can only become a better R programmer after writing many R codes and sometimes reading some R codes. There will be discouraging error messages, and many of them could look "stupid" (or inefficient) at the next time you read them. Remember, this is the learning process that a beginner has to go through. So, please type the codes discussed in the notes and excecute them in R for your own benefits. 
 
-The note is organized as follows. Section 1 introduces some basic R codes. I wrote them just based on my poor memory, and I might miss some important ones. I would probably talk more during our meetings. Section 2 focuses on the R toolkits for data management. An applied economics researcher could spend much time of cleaning the data. But as you will see, R has provided some powerful tools for us to clean the data. The third section introduces the codes useful for data visualization. I will teach you how to plot in R like a painter, to whom only creativity forms the boundary. The last section provides some advices that might help you to proceed to advanced levels.       
+The note is organized as follows. Section 1 introduces some basic R codes. I wrote them just based on my poor memory, and I might miss some important ones. More would be discussed in the class. Section 2 focuses on the R toolkits for data management. An applied economics researcher could spend much time of cleaning the data. But as you will see, R has provided some powerful tools for us to clean the data. The third section introduces the codes useful for data visualization. I will teach you how to plot in R like a painter, to whom only creativity forms the boundary. The last section provides some advices that might help you to proceed to advanced levels.       
 
 # 1. R basics  
 The codes covered in this section are basic and fundamental R codes. You really have to know all of these before you go further. At this point, I assume that you have installed R and Rstudio on you computer and that you know where to and how to excecute R codes. If you have not installed them, [\underline {here}](https://github.com/cbw1243/KSUMathReview/blob/master/RMaterials/RInstall.pdf) is a short guidance. 
@@ -383,23 +383,22 @@ for (i in 1:length(colValues)){
 
 \newpage
 
-# 2. Data management   
-For empirical works, data management usually takes a lot of time. The raw data could be messed up in different ways. Luckilily, R is very powerful when it comes to the data management. The most powerful tools in R are the functions included in the "dplyr" and "tidyr" packages. I encourage all of you to learn these two packages hardly and master the functions in them. You can save plenty of time in your future research if you spend enough time learning them at this stage. In my case, I am able to spend very few time dealing with data now after equipping myself with these tools, even though my research are quite data intensive.  
+# 2. Data management    
+An empirical researcher often has to spend a big chunk of the time to clean the data. The raw data, which might be from survey or other sources, could be messy. R is very powerful when cleaning the data. And the most powerful tools in R are the functions included in the "dplyr" and "tidyr" packages. I encourage all of you to learn these two packages and master the functions in them. You can save plenty of time in the future if you spend enough time learning them now. Actually, these functionas are self-explanatory and easy to learn. 
 
-These functionas are usually self-explanatory and easy to learn. In the example below, I provide the codes that I have written for accomplishing a research task assigned by my advisor. Specifically, the objective of the research task is to show the allocation of China's soybean import shares across source countries. I hope that this example could help you get started with the packages. 
+In the example below, I provide the codes that I have written for accomplishing a research task. Specifically, the objective of the research task is to show the allocation of China's soybean import shares across source exporting countries. I think it is a good example of showing you how to use the two packages. 
 
 ## 2.1 Read the data    
-First, I went to the UN Comtrade database (a popular database for trade analysis provided by the United Nations) to the download the annual bilateral trade data. I will send the downloaded data to you, but you can also access to it by clicking on the link: 
-https://www.dropbox.com/s/8r5n08e3u3y4fhg/comtrade_trade_data.csv?dl=0
+First, I went to the UN Comtrade database (a popular database for getting trade data that are provided by the United Nations) to the download the annual bilateral trade data. You can download the dataset from my GitHub website (see [\underline {here}](https://github.com/cbw1243/KSUMathReview/blob/master/RMaterials/))
 ```{r, echo = T, eval = T}
 # Read CSV data.
 dat <- data.table::fread('comtrade_trade_data.csv')
 head(dat)
 ```
-The original data are in CSV format. Through the "head" function, we see that the data are in good shape. But there are redundant information that I do not need, such as the "Unit Code". Now I transforam the data into desired format and extract the needed information. 
+The original data are in CSV format. The "head" function returns the first 6 rows in the dataset. Of course, you can change the number of rows that you wan to see, using `head(dat, n = 10)' (say, you want to see the first 10 rows). You can see that the format of the data is not bad. But there are redundant information that I do not need, such as the "Unit Code". Now I transforam the data into desired (long) format and get the needed information. 
 
 ## 2.2 Data wrangling   
-Note that this data contain "Reporter Code" and "Partner Code". These are country codes used by the United Nations to identify countries. For instance, 156 is the code for China. In this dataset, all "Reporter Code" are 156 because I only download China's import data. To get the country names that we know, I match the trade data with another dataset provided by the United Nations that records the country names and country codes. I will send the data to you prior to the class, but you can also access to it by clicking on the link: https://www.dropbox.com/s/tm21wtovgey9frt/UN%20Comtrade%20Country%20List.xls?dl=0 (this is an excel file). 
+Note that this data contain "Reporter Code" and "Partner Code". These are country codes used by the United Nations to identify countries. For instance, 156 is the code for China. In this dataset, all "Reporter Code" are 156 because I only download China's import data. To get the country names that we know, I match the trade data with another dataset provided by the United Nations that records the country names and country codes. The data can also be downloaded from [\underline {here}](https://github.com/cbw1243/KSUMathReview/blob/master/RMaterials/).
 
 
 ```{r, echo = T, eval = T}
@@ -638,9 +637,7 @@ The R blogger (https://www.r-bloggers.com/) is a nice website that collects R ne
 ## 4.2 Use R  
 As mentioned above, you can never become proficient at R without enough practices. If you have data works, do them in R and try to avoid excel as much as you can. Do not take me wrong on this. I do not dislike Excel. My point is that you never improve as a R user by using excel or other softwares so frequently.   
 
-I programmed most of the statistical or economic models that I encountered when taking the guraduate courses, ranging from STAT 712 (Optimization) to ECON 930 (Econometrics II), from ECON 720 (Microeconomic theory) to ECON 981 (International Trade). This is why I have writtern tens of thousands of lines of R codes, before I even realize it. You might know that Excel and GAMS are required for AGEC 712. But, it does not mean that R is not suitable for doing those. I gurantee you that most of the models covered in that course can be implemented in R. Besides, most economic models can also be implemented into R. Give it a try. The drawback of the strategy is that it takes time and energy. So, do not follow this unless you are dedicated and enjoy doing this. 
-
-Nevertheless, I want to highlight my experience with the econometrics cources. When I was taking econometrics II, I programmed most econometric models into R, from ordinary least squares, maximum likelihood estimation, to generalized methods of moments. I find that the exercises do not only improve my R skills, but also significantly improve my understandings of the econometrics. I recommend the PhDs to give it a try. 
+I have used R to program many economic and econometric models that I met when taking the guraduate courses, including STAT 712 (Optimization), ECON 930 (Econometrics II), ECON 720 (Microeconomic theory), and ECON 981 (International Trade) and so on. It was quite challenging. But it turns out that it also benefits me a lot -- I improved my R skills and gained deeper understanding of those economic and econometric models. You might want to give it a try. As a reminder, this strategy might takes time and energy. 
 
 ## 4.3 Learn from other R programmers     
 R is an open source, so you can have access to the codes embeded in the R packages. Get the functions, print them out, and read them line by line. Challenge yourself by asking the followig question -- "what are codes for". If you understand the codes and their purposes, you can write them later.  
